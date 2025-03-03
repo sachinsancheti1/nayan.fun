@@ -1,143 +1,153 @@
 // @ts-check
 import { AssetCache } from "@11ty/eleventy-fetch";
 import Image from "@11ty/eleventy-img";
-import { Client, iteratePaginatedAPI } from "@notionhq/client";
+import sanityClient from "@sanity/client";
+import imageUrlBuilder from "@sanity/image-url";
 import slugify from "@sindresorhus/slugify";
 import { config } from "dotenv";
 import { isProduction } from "../../eleventy/utils.js";
-import {
-	block2Markdown,
-	block2PlainText,
-	parseDateBlock,
-	parseFilesBlock,
-	parseMultiSelectBlock,
-} from "../../lib/notion-utils.js";
 config();
 
-const apiKey = process.env.NOTION_API_KEY;
-const pageId = process.env.NOTION_PAGE_ID;
+// Environment variables
+const projectId = process.env.SANITY_PROJECT_ID;
+const dataset = process.env.SANITY_DATASET || "production";
+if (!projectId || !dataset ) {
+  throw new Error(
+    "SANITY_PROJECT_ID, SANITY_DATASET must be provided"
+  );
+}
 
-// Matching the `expiry_time` of files URLs
-// provided by Notion API
+// Create a Sanity client instance
+const client = sanityClient({
+  projectId,
+  dataset,
+  useCdn: false, // `false` if you need fresh data
+});
+
+// Setup Sanity image URL builder
+const builder = imageUrlBuilder(client);
+function urlFor(source) {
+  return builder.image(source).url();
+}
+
+// Matching the expiry time of file URLs (if applicable)
 const CACHE_DURATION = "1h";
-
 const IMAGES_URL_PATH = "/images/remote/";
 const IMAGES_OUTPUT_DIR = "./src/images/remote/";
 
-const notion = new Client({ auth: apiKey });
+// Fetch posts data from Sanity with caching
+async function getSanityPostsData() {
+  const postsCache = new AssetCache("sanity-image-gallery");
 
-async function getNotionPostsData() {
-	if (apiKey === undefined || pageId === undefined) {
-		throw new Error("NOTION_API_KEY and NOTION_PAGE_ID is not provided");
-	}
+  if (postsCache.isCacheValid(CACHE_DURATION)) {
+    console.log("Getting posts from cache.");
+    return postsCache.getCachedValue();
+  }
 
-	const postsCache = new AssetCache("notion-image-gallery");
+  console.log("Posts cache expired. Fetching data from Sanity API");
 
-	if (postsCache.isCacheValid(CACHE_DURATION)) {
-		console.log("Getting posts from cache.");
-		return postsCache.getCachedValue();
-	}
+  // GROQ query matching the revised schema fields
+  const query = `*[_type == "post"] | order(publishedOn desc) {
+    title,
+    notes,
+    publishedOn,
+    tags,
+    "images": images[]{
+    "image": asset->url,
+    "alt": alt
+    },
+    body
+  }`;
 
-	console.log("Posts cache expired. Fetching data from Notion API");
-
-	const responseJSON = await notion.databases.query({
-		database_id: pageId,
-		sorts: [{ property: "Published on", direction: "descending" }],
-	});
-
-	await postsCache.save(responseJSON, "json");
-
-	return responseJSON;
+  const posts = await client.fetch(query);
+  await postsCache.save(posts, "json");
+  return posts;
 }
 
-function parseImagesPageData(obj) {
-	const {
-		properties: {
-			Title,
-			Notes,
-			"Published on": Published,
-			Tags,
-			Images,
-			"Image Alt Texts": imageAltTexts,
-		},
-	} = obj;
+// Transform a Sanity post into the structure your code expects
+function parseImagesPostData(post) {
+  const title = post.title || "";
+  const notes = post.notes || "";
+  const date = new Date(post.publishedOn);
+  const tags = post.tags || [];
+  const slug = slugify(title);
 
-	const notes = block2Markdown(Notes);
-	const title = block2Markdown(Title);
-	const date = parseDateBlock(Published);
-	const tags = parseMultiSelectBlock(Tags);
-	const slug = slugify(title);
-	let images = parseFilesBlock(Images);
+  // Process images from the post.
+  // Each image object is expected to have an "image" property for the URL
+  // and an optional "alt" property for the alternative text.
+  const images = (post.images || [])
+    .map((figure) => {
+      if (figure && figure.image) {
+        return {
+          url: figure.image,
+          alt: figure.alt || "",
+        };
+      }
+      return null;
+    })
+    .filter(Boolean);
 
-	let altTexts = block2PlainText(imageAltTexts);
-	altTexts = altTexts.split("\n\n");
-	images = images.map((img, i) => {
-		return {
-			...img,
-			altText: altTexts[i] ?? "",
-		};
-	});
-
-	return { title, notes, date, tags, images, slug };
+  return { title, notes, date, tags, images, slug };
 }
 
-function createPosts(notionData) {
-	const { results } = notionData;
-	const imagePages = results
-		.filter(
-			(p) =>
-				p?.object === "page" &&
-				p?.archived === false &&
-				p?.properties?.Images?.files.length > 0,
-		)
-		.map(parseImagesPageData);
-	return imagePages;
+// Build our posts array from Sanity data
+function createPosts(sanityData) {
+  return sanityData.map(parseImagesPostData);
 }
 
-async function fetchRemoteImage(remoteUrl, altText) {
-	const metadata = await Image(remoteUrl, {
-		widths: [2600],
-		outputDir: IMAGES_OUTPUT_DIR,
-		urlPath: IMAGES_URL_PATH,
-		formats: ["jpeg"],
-		cacheOptions: {
-			duration: CACHE_DURATION,
-		},
-		sharpJpegOptions: {
-			quality: 100,
-		},
-	});
+// Fetch and process a remote image using eleventy-img
+async function fetchRemoteImage(remoteUrl, alt) {
+  if (typeof remoteUrl !== "string") {
+    throw new Error(`Expected remoteUrl to be a string, got: ${typeof remoteUrl}`);
+  }
 
-	const { width, height, url } = metadata?.jpeg?.[0] ?? {};
+  const metadata = await Image(remoteUrl, {
+    widths: [2600],
+    outputDir: IMAGES_OUTPUT_DIR,
+    urlPath: IMAGES_URL_PATH,
+    formats: ["jpeg"],
+    cacheOptions: {
+      duration: CACHE_DURATION,
+    },
+    sharpJpegOptions: {
+      quality: 100,
+    },
+  });
 
-	return { width, height, url, altText };
+  if (!metadata || !metadata.jpeg || !metadata.jpeg.length) {
+    throw new Error(`Image processing failed for ${remoteUrl}`);
+  }
+
+  const { width, height, url } = metadata.jpeg[0];
+  return { width, height, url, alt };
 }
 
+// Process each post’s images
 async function fetchRemoteImages(posts) {
-	return await Promise.all(
-		posts.map(async (post) => {
-			const localImages = await Promise.all(
-				post?.images?.map(({ url, altText }) => fetchRemoteImage(url, altText)),
-			);
-			return { ...post, localImages };
-		}),
-	);
+  return await Promise.all(
+    posts.map(async (post) => {
+      const localImages = await Promise.all(
+        post.images.map(({ url, alt }) => fetchRemoteImage(url, alt))
+      );
+      return { ...post, localImages };
+    })
+  );
 }
 
 const now = new Date();
 function isFuturePost(post) {
-	return post.date > now;
+  return post.date > now;
 }
 
 export default async function () {
-	const rawData = await getNotionPostsData();
-	let posts = createPosts(rawData);
+  const rawData = await getSanityPostsData();
+  let posts = createPosts(rawData);
 
-	posts = await fetchRemoteImages(posts);
+  posts = await fetchRemoteImages(posts);
 
-	if (isProduction) {
-		posts = posts.filter((p) => !isFuturePost(p));
-	}
+  if (isProduction) {
+    posts = posts.filter((p) => !isFuturePost(p));
+  }
 
-	return posts;
+  return posts;
 }

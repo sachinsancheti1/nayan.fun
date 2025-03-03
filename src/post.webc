@@ -22,14 +22,14 @@
 		<ul class="grid flow-space-xl" role="list">
 			<li
 				webc:for="(img,index) of post.localImages"
-				:data-aspect-ratio="isLandscape(img.width,img.height) ? 'landscape' : 'portrait'"
+				:data-aspect-ratio="isLandscape(img.width, img.height) ? 'landscape' : 'portrait'"
 			>
 				<framed-img
 					:@src="img.url"
-					:@alt="img.altText"
+					:@alt="img.alt"
 					:@width="img.width"
 					:@height="img.height"
-					:@sizes="sizes(post.localImages,index)"
+					:@sizes="sizes(post.localImages, index)"
 					@widths="300,600,900,1200,1500,1800,2100"
 					@img-class="u-photo"
 				></framed-img>
@@ -46,10 +46,9 @@
 			Drawn on
 			<time
 				class="dt-published"
-				:datetime="date(post.date,'yyyy-MM-dd',)"
+				:datetime="date(post.date,'yyyy-MM-dd')"
 				@text="date(post.date,'EEEE, d MMMM, yyyy')"
-			></time
-			>.
+			></time>.
 		</p>
 	</div>
 
