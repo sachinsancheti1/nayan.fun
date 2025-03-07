@@ -1,0 +1,37 @@
+{
+	"name": "@nayan-fun/web",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "NODE_ENV=production  eleventy --quiet",
+		"delete:cache": "del .cache && del src/images/remote/*.jpeg",
+		"delete:dist": "del dist",
+		"clean": "run-p delete:*",
+		"dev": "eleventy --serve"
+	},
+	"author": "Saneef Ansari <hello@saneef.com> (https://saneef.com/), Sachin Sancheti <sachin.sancheti@gmail.com>",
+	"license": "MIT",
+	"devDependencies": {
+		"@11ty/eleventy": "3.0.0-alpha.5",
+		"@11ty/eleventy-fetch": "^4.0.0",
+		"@11ty/eleventy-img": "^4.0.2",
+		"@11ty/eleventy-plugin-bundle": "^1.0.5",
+		"@11ty/eleventy-plugin-rss": "^1.2.0",
+		"@11ty/eleventy-plugin-webc": "^0.11.2",
+		"@notionhq/client": "^2.2.14",
+		"@sindresorhus/slugify": "^2.2.1",
+		"browserslist": "^4.22.3",
+		"del-cli": "^5.1.0",
+		"dotenv": "^16.4.3",
+		"html-minifier-terser": "^7.2.0",
+		"lightningcss": "^1.23.0",
+		"luxon": "^3.4.4",
+		"netlify-plugin-cache": "^1.0.3",
+		"npm-run-all": "^4.1.5"
+	},
+	"dependencies": {
+		"@sanity/client": "^6.28.2",
+		"@sanity/image-url": "^1.1.0"
+	}
+}
