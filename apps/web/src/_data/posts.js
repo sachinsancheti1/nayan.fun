@@ -20,6 +20,8 @@ if (!projectId || !dataset) {
 const client = createClient({
 	projectId,
 	dataset,
+	perspective: "published",
+	apiVersion: "2021-03-25",
 	useCdn: false, // `false` if you need fresh data
 });
 

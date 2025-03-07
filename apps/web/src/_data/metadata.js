@@ -14,6 +14,8 @@ if (!projectId || !dataset) {
 const client = createClient({
 	projectId,
 	dataset,
+	perspective: "published",
+	apiVersion: "2021-03-25",
 	useCdn: false, // Set to `true` if you want cached data
 });
 
