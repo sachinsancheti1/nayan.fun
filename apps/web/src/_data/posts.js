@@ -91,7 +91,7 @@ function parsePostData(post) {
 // Build our posts array from Sanity data
 function createPosts(sanityData) {
 	const posts = sanityData.map(parsePostData);
-	console.log(posts);
+	console.log(JSON.stringify(posts));
 	return posts;
 }
 

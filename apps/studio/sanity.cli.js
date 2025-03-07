@@ -1,7 +1,7 @@
 import {defineCliConfig} from 'sanity/cli'
 import {projectId} from './sanity.config'
 
-console.log('Project ID:', projectId)
+// console.log('Project ID:', projectId)
 
 export default defineCliConfig({
   api: {
