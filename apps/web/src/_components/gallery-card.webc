@@ -80,7 +80,7 @@
 		>
 			<framed-img
 				:@src="img.url"
-				:@alt="img.altText"
+				:@alt="img.alt"
 				:@width="img.width"
 				:@height="img.height"
 				:@sizes="sizes(img.width, img.height)"
