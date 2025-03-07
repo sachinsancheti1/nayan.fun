@@ -50,10 +50,7 @@ export default function (eleventyConfig) {
 	eleventyConfig.setServerPassthroughCopyBehavior("passthrough");
 	eleventyConfig.addPassthroughCopy({ [`${INPUT_DIR}/public`]: "." });
 	eleventyConfig.addPassthroughCopy("./src/fonts/*.woff2");
-
-	if (!isProduction) {
-		eleventyConfig.addPassthroughCopy("./src/images/remote");
-	}
+	eleventyConfig.addPassthroughCopy("./src/images/remote");
 
 	return {
 		dir: { input: INPUT_DIR, output: OUTPUT_DIR },
