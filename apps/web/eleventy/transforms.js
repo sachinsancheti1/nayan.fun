@@ -45,15 +45,13 @@ export function cssTransforms(eleventyConfig) {
 }
 
 export function imageTransforms(eleventyConfig, { urlPath }) {
-	if (isProduction) {
-		eleventyConfig.addPlugin(eleventyImageTransformPlugin, {
-			urlPath,
-			formats: ["avif", "webp", "jpeg"],
-			widths: [300, 600, 900, 1200, 1500, 1800, 2100],
-			defaultAttributes: {
-				loading: "lazy",
-				decoding: "async",
-			},
-		});
-	}
+	eleventyConfig.addPlugin(eleventyImageTransformPlugin, {
+		urlPath,
+		formats: ["avif", "webp", "jpeg"],
+		widths: [300, 600, 900, 1200, 1500],
+		defaultAttributes: {
+			loading: "lazy",
+			decoding: "async",
+		},
+	});
 }
