@@ -10,7 +10,7 @@ import BlocksToMarkdown from "@sanity/block-content-to-markdown";
 config();
 
 // Environment variables
-const projectId = process.env.SANITY_PROJECT_ID;
+const projectId = process.env.SANITY_PROJECT_ID || 'j0ml5s7u';
 const dataset = process.env.SANITY_DATASET || "production";
 if (!projectId || !dataset) {
 	throw new Error("SANITY_PROJECT_ID, SANITY_DATASET must be provided");
