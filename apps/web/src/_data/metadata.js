@@ -1,5 +1,5 @@
 // src/_data/metadata.js
-import sanityClient from "@sanity/client";
+import { createClient } from "@sanity/client";
 import { AssetCache } from "@11ty/eleventy-fetch";
 import { config } from "dotenv";
 config();
@@ -11,7 +11,7 @@ if (!projectId || !dataset) {
 	throw new Error("SANITY_PROJECT_ID, SANITY_DATASET must be provided");
 }
 
-const client = sanityClient({
+const client = createClient({
 	projectId,
 	dataset,
 	useCdn: false, // Set to `true` if you want cached data

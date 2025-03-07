@@ -1,7 +1,7 @@
 // @ts-check
 import { AssetCache } from "@11ty/eleventy-fetch";
 import Image from "@11ty/eleventy-img";
-import sanityClient from "@sanity/client";
+import { createClient } from "@sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
 import slugify from "@sindresorhus/slugify";
 import { config } from "dotenv";
@@ -17,7 +17,7 @@ if (!projectId || !dataset) {
 }
 
 // Create a Sanity client instance
-const client = sanityClient({
+const client = createClient({
 	projectId,
 	dataset,
 	useCdn: false, // `false` if you need fresh data
