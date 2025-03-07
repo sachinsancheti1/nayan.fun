@@ -54,8 +54,7 @@ async function getSanityPostsData() {
     "images": images[]{
     "image": asset->url,
     "alt": alt
-    },
-    body
+    }
   }`;
 
 	const posts = await client.fetch(query);
@@ -86,7 +85,7 @@ function parsePostData(post) {
 		})
 		.filter(Boolean);
 
-	return { title, notes, date, tags, images, slug, body };
+	return { title, notes, date, tags, images, slug };
 }
 
 // Build our posts array from Sanity data
