@@ -44,7 +44,7 @@ export default defineType({
       title: 'Tags',
       type: 'array',
       description: 'Tags for the post',
-      of: [{ type: 'string' }],
+      of: [{type: 'string'}],
     }),
     defineField({
       name: 'body',
@@ -56,7 +56,8 @@ export default defineType({
   preview: {
     select: {
       title: 'title',
-      media: 'images.0',
+      subtitle: 'publishedOn',
+      media: 'images.0.asset',
     },
     prepare(selection) {
       return {...selection}

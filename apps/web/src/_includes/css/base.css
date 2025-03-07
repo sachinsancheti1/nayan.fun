@@ -39,9 +39,9 @@
 }
 
 :root {
-	--sans-serif: "Playpen Sans", Seravek, "Gill Sans Nova", Ubuntu, Calibri,
-		"DejaVu Sans", source-sans-pro, sans-serif, "Apple Color Emoji",
-		"Segoe UI Emoji";
+	--sans-serif:
+		"Playpen Sans", Seravek, "Gill Sans Nova", Ubuntu, Calibri, "DejaVu Sans",
+		source-sans-pro, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 
 	--container-max-width: 56rem;
 	--container-padding-inline: var(--space-xs);

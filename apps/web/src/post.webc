@@ -38,7 +38,7 @@
 
 		<div class="notes e-content">
 			<template webc:type="11ty" 11ty:type="webc,md">
-				<template @raw="post.notes" webc:nokeep></template>
+				<template @raw="post.body" webc:nokeep></template>
 			</template>
 		</div>
 
@@ -48,7 +48,8 @@
 				class="dt-published"
 				:datetime="date(post.date,'yyyy-MM-dd')"
 				@text="date(post.date,'EEEE, d MMMM, yyyy')"
-			></time>.
+			></time
+			>.
 		</p>
 	</div>
 

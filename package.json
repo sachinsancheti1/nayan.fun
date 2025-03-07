@@ -1,27 +1,27 @@
 {
-    "name": "nayan.fun",
-    "private": true,
-    "scripts": {
-        "build": "turbo run build",
-        "check": "turbo run check",
-        "dev": "turbo run dev",
-        "dev:nayan:web": "turbo run dev --filter=@nayan-fun/web",
-        "dev:studio:studio": "turbo run dev --filter=@nayan-fun/studio",
-        "lint": "turbo run lint",
-        "format": "prettier --write .",
-        "generate": "turbo run generate"
-    },
-    "devDependencies": {
-        "prettier": "^3.5.2",
-        "prettier-plugin-svelte": "^3.3.3",
-        "turbo": "^2.4.4"
-    },
-    "packageManager": "pnpm@8.15.6",
-    "engines": {
-        "node": ">=18"
-    },
-    "workspaces": [
-        "packages/*",
-        "apps/*"
-    ]
+  "name": "nayan.fun",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "check": "turbo run check",
+    "dev": "turbo run dev",
+    "dev:nayan:web": "turbo run dev --filter=@nayan-fun/web",
+    "dev:studio:studio": "turbo run dev --filter=@nayan-fun/studio",
+    "lint": "turbo run lint",
+    "format": "prettier --write .",
+    "generate": "turbo run generate"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.2",
+    "prettier-plugin-svelte": "^3.3.3",
+    "turbo": "^2.4.4"
+  },
+  "packageManager": "pnpm@8.15.6",
+  "engines": {
+    "node": ">=18"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ]
 }

@@ -5,10 +5,10 @@ import eleventyFetch from "@11ty/eleventy-fetch";
 // https://multiline.co/mment/2023/12/building-robots-txt/
 
 export default async function () {
-  const url = "https://api.ashur.cab/robots/v2.json";
+	const url = "https://api.ashur.cab/robots/v2.json";
 
-  return eleventyFetch(url, {
-    duration: "1d",
-    type: "json",
-  });
+	return eleventyFetch(url, {
+		duration: "1d",
+		type: "json",
+	});
 }
