@@ -16,6 +16,9 @@ package = "netlify-plugin-cache"
     ".cache"
   ]
 
+[[plugins]]
+package = "netlify-plugin-debug-cache"
+
 ##
 ## HEADERS
 ##
