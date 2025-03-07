@@ -46,11 +46,6 @@ export default defineType({
       description: 'Tags for the post',
       of: [{type: 'string'}],
     }),
-    defineField({
-      name: 'body',
-      title: 'Body',
-      type: 'blockContent',
-    }),
   ],
 
   preview: {

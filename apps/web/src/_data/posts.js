@@ -66,11 +66,10 @@ async function getSanityPostsData() {
 // Transform a Sanity post into the structure your code expects
 function parsePostData(post) {
 	const title = post.title || "";
-	const notes = post.notes || "";
+	const notes = BlocksToMarkdown(post.notes);
 	const date = new Date(post.publishedOn);
 	const tags = post.tags || [];
 	const slug = slugify(title);
-	const body = BlocksToMarkdown(post.body);
 
 	// Process images from the post.
 	// Each image object is expected to have an "image" property for the URL

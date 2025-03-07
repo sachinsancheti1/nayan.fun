@@ -4,7 +4,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"build": "NODE_ENV=production  eleventy --quiet",
+		"build": "eleventy",
 		"delete:cache": "del .cache && del src/images/remote/*.jpeg",
 		"delete:dist": "del dist",
 		"clean": "run-p delete:*",

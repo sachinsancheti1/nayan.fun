@@ -38,7 +38,7 @@
 
 		<div class="notes e-content">
 			<template webc:type="11ty" 11ty:type="webc,md">
-				<template @raw="post.body" webc:nokeep></template>
+				<template @raw="post.notes" webc:nokeep></template>
 			</template>
 		</div>
 
