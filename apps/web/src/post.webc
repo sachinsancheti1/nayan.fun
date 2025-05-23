@@ -1,6 +1,5 @@
 ---
 ---
-
 <script webc:setup>
 	function sizes(array, currentIndex) {
 		if (array.length > 1) {
@@ -48,9 +47,22 @@
 				class="dt-published"
 				:datetime="date(post.date,'yyyy-MM-dd')"
 				@text="date(post.date,'EEEE, d MMMM, yyyy')"
-			></time
-			>.
+			></time>.
 		</p>
+
+		<wc:if condition="post.tags">
+  <div class="post-tags">
+    <p>Tags:</p>
+    <ul>
+      <wc:repeat items="post.tags" as="tag">
+        <li>
+          <a :href="'/tags/' + (tag | slugify) + '/'" @text="tag"></a>
+        </li>
+      </wc:repeat>
+    </ul>
+  </div>
+</wc:if>
+
 	</div>
 
 	<footer class="flow-space-xl">
@@ -83,5 +95,21 @@
 
 	h1 {
 		font-size: var(--step-2);
+	}
+
+	.post-tags {
+		margin-top: 1rem;
+	}
+
+	.post-tags ul {
+		list-style: none;
+		padding: 0;
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.post-tags li a {
+		text-decoration: none;
+		color: var(--link-color);
 	}
 </style>

@@ -1,0 +1,12 @@
+---
+title: "All Tags"
+---
+
+<h1 @text="title"></h1>
+<ul>
+  <wc:repeat items="tagList" as="tag">
+    <li>
+      <a :href="'/tags/' + tag + '/'" @text="tag"></a>
+    </li>
+  </wc:repeat>
+</ul>

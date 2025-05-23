@@ -21,6 +21,14 @@ export default function (eleventyConfig) {
 		components: "src/_components/**/*.webc",
 	});
 
+	// Remove async collections. Your posts data is available as global data via src/_data/posts.js.
+	// And tagList is now built in src/_data/tagList.js.
+
+	// Add a filter to slugify tags for URL usage
+	eleventyConfig.addFilter("slugify", function (value) {
+		return value.toLowerCase().trim().replace(/\s+/g, "-");
+	});
+
 	eleventyConfig.addPlugin(filters);
 	eleventyConfig.addPlugin(htmlTransforms);
 	eleventyConfig.addPlugin(cssTransforms);
