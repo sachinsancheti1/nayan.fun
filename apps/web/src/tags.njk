@@ -1,0 +1,54 @@
+---
+title: All Tags
+permalink: /tags/
+eleventyExcludeFromCollections: true
+---
+
+<h1>{{ title }}</h1>
+
+<p>Browse all available tags:</p>
+
+{% if tagList and tagList.length > 0 %}
+  <div class="tags-container">
+    <ul class="tags-list">
+      {% for tag in tagList %}
+        <li>
+          <a href="/tags/{{ tag | slugify }}/">
+            <span class="tag-name">{{ tag }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% else %}
+  <p>No tags found.</p>
+{% endif %}
+
+<style>
+  .tags-container {
+    margin: var(--space-l) 0;
+  }
+  
+  .tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    list-style: none;
+    padding: 0;
+  }
+  
+  .tags-list li a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--color-light-shade);
+    border-radius: 2rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+  
+  .tags-list li a:hover {
+    background-color: var(--color-primary-tint);
+  }
+</style>

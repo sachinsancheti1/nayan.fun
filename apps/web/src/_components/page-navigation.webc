@@ -1,0 +1,20 @@
+<style webc:scoped>
+  :host {
+    display: flex;
+    gap: var(--space-s);
+  }
+  
+  :host a {
+    text-decoration-line: none;
+  }
+  
+  :host a:hover,
+  :host a:focus,
+  :host a:active {
+    text-decoration-line: underline;
+  }
+</style>
+
+<nav>
+  <a href="/tags/">Tags</a>
+</nav>

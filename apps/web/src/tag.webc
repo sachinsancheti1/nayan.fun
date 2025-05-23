@@ -3,10 +3,39 @@ title: "All Tags"
 ---
 
 <h1 @text="title"></h1>
-<ul>
-  <wc:repeat items="tagList" as="tag">
-    <li>
-      <a :href="'/tags/' + tag + '/'" @text="tag"></a>
-    </li>
-  </wc:repeat>
+
+<p>Posts tagged with "<span @text="tag"></span>":</p>
+
+<ul webc:is="page-listing">
+  <li webc:for="(post, index) of posts">
+    <gallery-card :@post="post" :@load-eager="index <= 3"></gallery-card>
+  </li>
 </ul>
+
+<p webc:if="posts.length === 0">No posts found with this tag.</p>
+
+<style webc:scoped>
+  .all-tags {
+    margin-top: var(--space-xl);
+  }
+  
+  .all-tags ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .all-tags a {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background-color: var(--color-light-shade);
+    border-radius: 0.25rem;
+    text-decoration: none;
+  }
+  
+  .all-tags a:hover {
+    background-color: var(--color-primary-tint);
+  }
+</style>

@@ -1,27 +1,42 @@
 export default {
   pagination: {
-    data: "tagList", // Global data defined in src/_data/tagList.js
+    data: "tagList",
     size: 1,
-    alias: "tag"
+    alias: "tag",
   },
-  permalink: ({ tag }) => `/tags/${tag}/`,
+  permalink: ({ tag }) => `/tags/${tag.toLowerCase().trim().replace(/\s+/g, "-")}/`,
   eleventyComputed: {
-    title: ({ tag }) => `Posts tagged “${tag}”`,
+    title: ({ tag }) => `Posts tagged "${tag}"`,
     posts: ({ tag, posts }) => {
       if (!posts || posts.length === 0) {
-        console.warn("Global posts data is empty in tag.11tydata.js");
-        return [];
+        console.warn("Global posts data is empty in tag.11tydata.js")
+        return []
       }
-      // Use the same normalization as in tagList.js
-      const normalize = str => str.toLowerCase().trim().replace(/\s+/g, "-");
-      const matchingPosts = posts.filter(post => {
-        if (!post.tags) return false;
-        return post.tags.some(t => normalize(t) === tag);
-      });
+
+      // Create a normalized version of the current tag for comparison
+      const normalizedCurrentTag = tag.toLowerCase().trim().replace(/\s+/g, "-")
+
+      // Filter posts that have tags matching the normalized form
+      const matchingPosts = posts.filter((post) => {
+        if (!post.tags || !Array.isArray(post.tags)) return false
+
+        return post.tags.some((postTag) => {
+          if (!postTag || typeof postTag !== "string") return false
+          const normalizedPostTag = postTag.toLowerCase().trim().replace(/\s+/g, "-")
+          return normalizedPostTag === normalizedCurrentTag
+        })
+      })
+
+      console.log(`Tag "${tag}" (normalized: "${normalizedCurrentTag}") matched ${matchingPosts.length} posts`)
+
       if (matchingPosts.length === 0) {
-        console.warn(`No posts matched the tag "${tag}"`);
+        console.warn(`No posts matched the tag "${tag}"`)
+        // Let's also log what tags are actually in the posts for debugging
+        const allPostTags = posts.flatMap((p) => p.tags || []).filter(Boolean)
+        console.log("Available tags in posts:", [...new Set(allPostTags)])
       }
-      return matchingPosts;
-    }
-  }
-};
+
+      return matchingPosts
+    },
+  },
+}

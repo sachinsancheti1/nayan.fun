@@ -50,18 +50,23 @@
 			></time>.
 		</p>
 
-		<wc:if condition="post.tags">
-  <div class="post-tags">
-    <p>Tags:</p>
-    <ul>
-      <wc:repeat items="post.tags" as="tag">
-        <li>
-          <a :href="'/tags/' + (tag | slugify) + '/'" @text="tag"></a>
-        </li>
-      </wc:repeat>
-    </ul>
-  </div>
-</wc:if>
+		<!-- Tag display using template syntax for better compatibility -->
+		<template webc:type="11ty" 11ty:type="njk">
+			{% if post.tags and post.tags.length > 0 %}
+				<div class="post-tags">
+					<p>Tags:</p>
+					<ul class="tags-list">
+						{% for tag in post.tags %}
+							{% if tag %}
+								<li>
+									<a href="/tags/{{ tag | slugify }}/" class="tag-pill">{{ tag }}</a>
+								</li>
+							{% endif %}
+						{% endfor %}
+					</ul>
+				</div>
+			{% endif %}
+		</template>
 
 	</div>
 
@@ -98,18 +103,48 @@
 	}
 
 	.post-tags {
-		margin-top: 1rem;
+		margin-top: var(--space-m);
 	}
 
-	.post-tags ul {
+	.post-tags p {
+		margin-bottom: var(--space-xs);
+		font-weight: bold;
+		color: var(--color-dark-tint);
+	}
+
+	.tags-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2xs);
 		list-style: none;
 		padding: 0;
-		display: flex;
-		gap: 0.5rem;
+		margin: 0;
 	}
 
-	.post-tags li a {
+	.tag-pill {
+		display: inline-block;
+		padding: 0.4rem 0.8rem;
+		background-color: var(--color-light-shade);
+		border-radius: 2rem;
 		text-decoration: none;
-		color: var(--link-color);
+		font-size: var(--step--1);
+		transition: background-color 0.2s ease;
+		color: var(--color-dark);
+	}
+
+	.tag-pill:hover {
+		background-color: var(--color-primary-tint);
+		color: var(--color-dark);
+	}
+
+	@media (max-width: 600px) {
+		.tags-list {
+			gap: var(--space-3xs);
+		}
+		
+		.tag-pill {
+			padding: 0.3rem 0.6rem;
+			font-size: var(--step--2);
+		}
 	}
 </style>
