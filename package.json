@@ -12,11 +12,11 @@
     "generate": "turbo run generate"
   },
   "devDependencies": {
-    "prettier": "^3.5.2",
-    "prettier-plugin-svelte": "^3.3.3",
-    "turbo": "^2.4.4"
+    "prettier": "^3.5.3",
+    "prettier-plugin-svelte": "^3.4.0",
+    "turbo": "^2.5.4"
   },
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.12.1",
   "engines": {
     "node": ">=18"
   },
