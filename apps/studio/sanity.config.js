@@ -1,6 +1,7 @@
 import {defineConfig} from 'sanity'
 import {deskStructure} from './deskStructure'
 import {dashboardConfig} from './dashboardConfig'
+import {media} from 'sanity-plugin-media'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
 
@@ -12,7 +13,7 @@ export default defineConfig({
   title: 'nayan-fun-studio',
   projectId,
   dataset: 'production',
-  plugins: [dashboardConfig, deskStructure, visionTool()],
+  plugins: [dashboardConfig, media(), deskStructure, visionTool()],
   schema: {
     types: schemaTypes,
   },
